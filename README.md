@@ -4,12 +4,12 @@
 
 ## Basic Details
 
-**Team Name:** [Your Team Name]
+**Team Name:** EL-trism
 
 ### Team Members
-- **Team Lead:** [Name] - [College]
-- **Member 2:** [Name] - [College]
-- **Member 3:** [Name] - [College]
+- **Team Lead:** Mohammed Nihal Reyasath - TKMCE
+- **Member 2:**  Sandesh KV - TKMCE
+- **Member 3:**  Mohamed Sabeeh Shihab - TKMCE
 
 ## Game Description
 [2-3 lines about what your game is, the genre, and what makes it fun or unique.]
@@ -40,19 +40,19 @@
 
 ### Screenshots (Add at least 3)
 
-![Screenshot1](Add screenshot 1 link)  
-*Add caption explaining what this shows*
+![Screenshot1](https://drive.google.com/file/d/1zTpDSk6_EBeJ9tILNTWulBllBmOIQZ1V/view?usp=drive_link)
+- studyinbg from library
 
 ![Screenshot2](Add screenshot 2 link)  
-*Add caption explaining what this shows*
+-https://drive.google.com/file/d/1dqA63Khi24eD9mRziMu0RHa5611K0pqT/view?usp=drive_link - princpipal requesting to get all certificates
 
 ![Screenshot3](Add screenshot 3 link)  
-*Add caption explaining what this shows*
+https://drive.google.com/file/d/1HMwBxGqP6LtgxQXgQcyA2d1BVEP_vE-A/view?usp=sharing - TKM campus map
 
 ### Game Demo
 
 #### Gameplay Video
-[Add link to gameplay video]  
+(https://www.youtube.com/watch?v=KVy8sZ7pG2Y)  
 
 ## Game Download / Deployment
 - **Playable Version / Download:** [Link to executable or archive]
