@@ -30,29 +30,29 @@ The core idea revolves around a first-year student's journey to collect 7 assign
 #### Installation / Setup
 
 [To build and run the game manually from source:]
-# 1. Create a new RPG Maker XP project
-# 2. Copy the following folders into your RMXP project:
-#    - Graphics/ (tilesets, characters, pictures)
-#    - Audio/ (SE, BGM, ME)
-#    - scripts_source/ (all Ruby scripts)
+1. Create a new RPG Maker XP project
+2. Copy the following folders into your RMXP project:
+    - Graphics/ (tilesets, characters, pictures)
+    - Audio/ (SE, BGM, ME)
+    - scripts_source/ (all Ruby scripts)
 
-# 3. Import scripts in RMXP Script Editor in this order:
-#    - Core/Config.rb
-#    - Systems/CertificateInventory.rb
-#    - Systems/QuizSystem.rb
-#    - UI/HUD.rb
-#    - EventHelpers.rb
-#    - Scenes/Scene_CollegeDash.rb
+ 3. Import scripts in RMXP Script Editor in this order:
+    - Core/Config.rb
+    - Systems/CertificateInventory.rb
+    - Systems/QuizSystem.rb
+    - UI/HUD.rb
+    - EventHelpers.rb
+    - Scenes/Scene_CollegeDash.rb
 
-# 4. Set up game switches:
-#    - Switch 10: "All Certificates Collected"
-#    - Switch 11: "ID Card Given"
-#    - Switch 12: "All Certificates Collected"
-#    - Switch 13: "Need More Certificates"
-#    - Switch 14: "Already Has ID Card"
+ 4. Set up game switches:
+    - Switch 10: "All Certificates Collected"
+    - Switch 11: "ID Card Given"
+    - Switch 12: "All Certificates Collected"
+    - Switch 13: "Need More Certificates"
+    - Switch 14: "Already Has ID Card"
 
-# 5. Create maps and events as per the game design
-# 6. Test and play!
+ 5. Create maps and events as per the game design
+ 6. Test and play!
 
 
 ## Game Documentation
@@ -73,7 +73,7 @@ Victory: Return to Principal with all certificates to win HESTIA ticket
 ### Screenshots (Add at least 3)
 
 ![Screenshot1](https://drive.google.com/file/d/1zTpDSk6_EBeJ9tILNTWulBllBmOIQZ1V/view?usp=drive_link)
-- studyinbg from library
+- studying from library
 
 ![Screenshot2](Add screenshot 2 link)  
 - (https://drive.google.com/file/d/1dqA63Khi24eD9mRziMu0RHa5611K0pqT/view?usp=drive_link) - principal requesting to get all certificates
