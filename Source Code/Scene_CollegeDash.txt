@@ -1,0 +1,41 @@
+# RGSS1 - Scene College Dash additions
+class Scene_Map
+  alias cdash_main main
+  def main
+    HUD.show if defined?(HUD)
+    cdash_main
+    HUD.hide if defined?(HUD)
+    HUD.hide_department if defined?(HUD)  # Hide department name when leaving map
+  end
+
+  alias cdash_update update
+  def update
+    cdash_update
+    HUD.refresh if defined?(HUD)
+    if CertificateInventory.all_collected?
+      $game_switches[CollegeDashConfig::PRINCIPAL_OFFICE_SWITCH] = true
+    end
+  end
+end
+
+# Principal's office winning message helper
+module CollegeDashWin
+  def self.try_win
+    if CertificateInventory.all_collected?
+      # Simple win message
+      $game_system.se_play($data_system.decision_se)
+      $game_temp.message_text = "All certificates submitted! You won a HESTIA ticket!"
+      true
+    else
+      $game_system.se_play($data_system.buzzer_se)
+      $game_temp.message_text = "You still need more certificates."
+      false
+    end
+  end
+end
+
+class Interpreter
+  def college_dash_win
+    CollegeDashWin.try_win
+  end
+end

@@ -1,0 +1,82 @@
+# RGSS1 - Quiz System
+class Window_Quiz < Window_Base
+  attr_reader :index
+  def initialize(question, choices, hint)
+    super(0, 0, 640, 320)
+    self.z = 5000
+    self.contents = Bitmap.new(self.width - 32, self.height - 32)
+    @question = question
+    @choices = choices
+    @hint = hint
+    @index = 0
+    refresh
+  end
+  def refresh
+    return if self.contents.nil?
+    self.contents.clear
+    self.contents.font.size = 22
+    self.contents.draw_text(0, 0, self.contents.width, 32, @question)
+    self.contents.font.size = 20
+    @choices.each_with_index do |c, i|
+      prefix = (i == @index) ? "> " : "  "
+      self.contents.draw_text(16, 40 + i*28, self.contents.width-32, 24, prefix + c)
+    end
+    self.contents.font.size = 18
+    self.contents.draw_text(0, 200, self.contents.width, 24, "Hint: " + @hint)
+  end
+  def move_cursor(d)
+    @index = (@index + d) % @choices.size
+    refresh
+  end
+  def dispose
+    self.contents.dispose if self.contents
+    super
+  end
+end
+
+module QuizSystem
+  def self.pick_quiz(data)
+    if data.is_a?(Array)
+      data[rand(data.size)]
+    else
+      data
+    end
+  end
+
+  def self.ask(dept_sym)
+    data = CollegeDashConfig::QUIZZES[dept_sym]
+    return false unless data
+    q = pick_quiz(data)
+    win = Window_Quiz.new(q[:question], q[:choices], q[:hint])
+    result = nil
+    loop do
+      Graphics.update
+      Input.update
+      if Input.trigger?(Input::UP)
+        win.move_cursor(-1)
+      elsif Input.trigger?(Input::DOWN)
+        win.move_cursor(+1)
+      elsif Input.trigger?(Input::C)
+        result = (win.index == q[:answer_i])
+        break
+      elsif Input.trigger?(Input::B)
+        result = false
+        break
+      end
+    end
+    win.dispose
+    play_answer_se(result)
+    if result
+      CertificateInventory.collect(dept_sym)
+    end
+    return result
+  end
+
+  def self.play_answer_se(correct)
+    begin
+      name = correct ? "Decision2" : "Buzzer1"
+      Audio.se_play("Audio/SE/" + name, 80, 100)
+    rescue
+    end
+  end
+end

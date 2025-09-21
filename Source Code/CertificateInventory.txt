@@ -1,0 +1,66 @@
+# RGSS1 - Certificate Inventory System
+module CertificateInventory
+  @@collected = {}
+  @@studied = {}  # Track which subjects have been studied
+  @@has_id_card = false  # Track if player has ID card
+
+  def self.reset!
+    @@collected = {}
+    @@studied = {}
+    @@has_id_card = false
+  end
+
+  def self.collect(dept_sym)
+    @@collected[dept_sym] = true
+    play_collect_se
+  end
+
+  def self.collected?(dept_sym)
+    @@collected[dept_sym] == true
+  end
+
+  def self.study(dept_sym)
+    @@studied[dept_sym] = true
+  end
+
+  def self.studied?(dept_sym)
+    @@studied[dept_sym] == true
+  end
+
+  def self.count
+    @@collected.size
+  end
+
+  def self.all_collected?
+    required = CollegeDashConfig::DEPARTMENTS
+    (required - @@collected.keys).empty?
+  end
+
+  # ID Card system
+  def self.give_id_card
+    @@has_id_card = true
+    play_collect_se
+  end
+
+  def self.has_id_card?
+    @@has_id_card
+  end
+
+  def self.play_collect_se
+    begin
+      se = RPG::AudioFile.new("Item3", 80) # Use your own SE in Audio/SE
+      Audio.se_play("Audio/SE/" + se.name, se.volume, 100) if se.name && se.name != ""
+    rescue
+      # ignore
+    end
+  end
+end
+
+# Reset inventory on new game
+class Scene_Title
+  alias cdash_command_new_game command_new_game
+  def command_new_game
+    CertificateInventory.reset!
+    cdash_command_new_game
+  end
+end

@@ -1,0 +1,177 @@
+# RGSS1 - HUD for certificate count (top right corner)
+class Window_CertificateHUD < Window_Base
+  def initialize
+    # Position in top right corner with wider size for ID card status
+    super(400, 0, 240, 64)
+    self.z = 3000
+    self.contents = Bitmap.new(self.width - 32, self.height - 32)
+    refresh
+  end
+  def refresh
+    return if self.contents.nil?
+    self.contents.clear
+    self.contents.font.size = 14  # Smaller font for more content
+    
+    total = 0
+    begin
+      deps = CollegeDashConfig::DEPARTMENTS
+      total = deps.is_a?(Array) ? deps.size : 0
+    rescue
+      total = 0
+    end
+    got = 0
+    begin
+      got = CertificateInventory.count
+      got = got.to_i
+    rescue
+      got = 0
+    end
+    
+    # Check ID card status
+    id_status = CertificateInventory.has_id_card? ? "YES" : "NO"
+    
+    # Display certificates and ID card status
+    text = "Certs: #{got}/#{total} | ID: #{id_status}"
+    self.contents.draw_text(0, 0, self.contents.width, 32, text.to_s, 1)
+  end
+  def dispose
+    self.contents.dispose if self.contents
+    super
+  end
+end
+
+module HUD
+  @@hud = nil
+  @@dept_hud = nil
+  def self.show
+    @@hud = Window_CertificateHUD.new
+  end
+  def self.refresh
+    @@hud.refresh if @@hud
+  end
+  def self.hide
+    if @@hud
+      @@hud.dispose
+      @@hud = nil
+    end
+  end
+  
+  # Department name display
+  def self.show_department(dept_name)
+    @@dept_hud = Window_DepartmentName.new(dept_name)
+  end
+  def self.hide_department
+    if @@dept_hud
+      @@dept_hud.dispose
+      @@dept_hud = nil
+    end
+  end
+end
+
+# Department name display window (bottom right)
+class Window_DepartmentName < Window_Base
+  def initialize(dept_name)
+    # Position at bottom right, larger size to fit text properly
+    super(350, 350, 290, 64)
+    self.z = 2500
+    self.contents = Bitmap.new(self.width - 32, self.height - 32)
+    self.contents.font.size = 14
+    self.contents.font.bold = true
+    self.contents.draw_text(0, 0, self.contents.width, 32, dept_name, 1)
+  end
+  def dispose
+    self.contents.dispose if self.contents
+    super
+  end
+end
+
+# Custom textbook window for library hints
+class Window_Textbook < Window_Base
+  def initialize(title, all_hints)
+    super(80, 80, 480, 320)
+    self.z = 6000
+    self.contents = Bitmap.new(self.width - 32, self.height - 32)
+    @title = title
+    @all_hints = all_hints
+    @current_index = 0
+    @total_hints = all_hints.size
+    refresh
+  end
+  
+  def refresh
+    return if self.contents.nil?
+    self.contents.clear
+    self.contents.font.size = 18
+    
+    # Title
+    self.contents.draw_text(0, 0, self.contents.width, 32, @title, 1)
+    
+    # Current hint with proper line breaks
+    current_hint = @all_hints[@current_index]
+    display_hint_with_breaks(current_hint)
+    
+    # Progress and instructions
+    self.contents.font.size = 16
+    progress_text = "Definition #{@current_index + 1}/#{@total_hints}"
+    self.contents.draw_text(0, self.contents.height - 48, self.contents.width, 24, progress_text, 1)
+    
+    if @current_index < @total_hints - 1
+      self.contents.draw_text(0, self.contents.height - 24, self.contents.width, 24, "Enter: Next | A: Exit", 1)
+    else
+      self.contents.draw_text(0, self.contents.height - 24, self.contents.width, 24, "Enter: Next | A: Exit", 1)
+    end
+  end
+  
+  def display_hint_with_breaks(hint)
+    # Split hint into words and create proper line breaks
+    words = hint.split(' ')
+    lines = []
+    current_line = ""
+    
+    words.each do |word|
+      test_line = current_line.empty? ? word : current_line + " " + word
+      if test_line.length > 50  # Max characters per line
+        lines << current_line
+        current_line = word
+      else
+        current_line = test_line
+      end
+    end
+    lines << current_line unless current_line.empty?
+    
+    # Display lines
+    y = 40
+    lines.each do |line|
+      break if y > self.contents.height - 80
+      self.contents.draw_text(16, y, self.contents.width - 32, 24, line)
+      y += 26
+    end
+  end
+  
+  def next_definition
+    @current_index += 1
+    refresh
+  end
+  
+  def finished?
+    @current_index >= @total_hints - 1
+  end
+  
+  def at_last_definition?
+    @current_index == @total_hints - 1
+  end
+  
+  # Accessor methods for external access
+  def current_index
+    @current_index
+  end
+  
+  def total_hints
+    @total_hints
+  end
+  
+  def dispose
+    self.contents.dispose if self.contents
+    super
+  end
+end

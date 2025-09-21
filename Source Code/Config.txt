@@ -1,0 +1,155 @@
+# RGSS1 (RPG Maker XP) - College Dash Config
+module CollegeDashConfig
+  DEPARTMENTS = [
+    :cse,   # Computer Science & Engineering
+    :ece,   # Electronics & Communication Engineering
+    :eee,   # Electrical & Electronics Engineering
+    :mech,  # Mechanical Engineering
+    :civil, # Civil Engineering
+    :arch,  # B. Architecture
+    :chem   # Chemical Engineering
+  ]
+
+  PRINCIPAL_OFFICE_SWITCH = 10  # Designer: set ON when all certificates collected
+
+  # Quiz data per department. Each value can be a single Hash (legacy) or an Array of Hashes.
+  QUIZZES = {
+    :cse => [
+      { :question => "What does CPU stand for?",
+        :choices  => ["Central Processing Unit", "Core Power Unit", "Compute Protocol Unit", "Central Program Utility"],
+        :answer_i => 0,
+        :hint     => "It's the brain of the computer." },
+      { :question => "Which is a programming paradigm?",
+        :choices  => ["Procedural", "Radial", "Orthogonal", "Spiral"],
+        :answer_i => 0,
+        :hint     => "C, Python can be written this way." },
+      { :question => "Big-O of binary search (sorted array)?",
+        :choices  => ["O(n)", "O(log n)", "O(n log n)", "O(1)"],
+        :answer_i => 1,
+        :hint     => "Halving each step." }
+    ],
+    :ece => [
+      { :question => "Signal measured in?",
+        :choices  => ["Ohms", "Volts", "Hertz", "Joules"],
+        :answer_i => 2,
+        :hint     => "Frequency units." },
+      { :question => "Which is an analog modulation?",
+        :choices  => ["ASK", "FSK", "PSK", "AM"],
+        :answer_i => 3,
+        :hint     => "Classic radio broadcasting." },
+      { :question => "Diode primarily allows current to flow in?",
+        :choices  => ["Both directions", "Reverse bias only", "Forward bias only", "Neither"],
+        :answer_i => 2,
+        :hint     => "One-way device." }
+    ],
+    :eee => [
+      { :question => "Kirchhoff's laws apply to?",
+        :choices  => ["Thermodynamics", "Electric circuits", "Fluid mechanics", "Quantum optics"],
+        :answer_i => 1,
+        :hint     => "Nodes and loops." },
+      { :question => "Unit of electric power?",
+        :choices  => ["Watt", "Volt", "Ampere", "Ohm"],
+        :answer_i => 0,
+        :hint     => "P = VI." },
+      { :question => "Transformers work on?",
+        :choices  => ["DC only", "AC only", "Both", "Neither"],
+        :answer_i => 1,
+        :hint     => "Faraday's law of induction." }
+    ],
+    :mech => [
+      { :question => "SI unit of force?",
+        :choices  => ["Newton", "Pascal", "Watt", "Joule"],
+        :answer_i => 0,
+        :hint     => "Named after Isaac." },
+      { :question => "Which cycle is used in petrol engines?",
+        :choices  => ["Otto", "Diesel", "Rankine", "Brayton"],
+        :answer_i => 0,
+        :hint     => "Four-stroke spark ignition." },
+      { :question => "Which property measures resistance to flow?",
+        :choices  => ["Viscosity", "Density", "Specific heat", "Entropy"],
+        :answer_i => 0,
+        :hint     => "Honey has high value of this." }
+    ],
+    :civil => [
+      { :question => "Cement + water forms?",
+        :choices  => ["Slurry", "Aggregate", "Rebar", "Bitumen"],
+        :answer_i => 0,
+        :hint     => "Used to bind aggregates." },
+      { :question => "Which test checks concrete compressive strength?",
+        :choices  => ["Slump test", "Cube test", "Rebound hammer test", "Sieve analysis"],
+        :answer_i => 1,
+        :hint     => "Standard 150mm cube." },
+      { :question => "Which structure carries traffic over obstacles?",
+        :choices  => ["Beam", "Bridge", "Column", "Footing"],
+        :answer_i => 1,
+        :hint     => "Across rivers or roads." }
+    ],
+    :arch => [
+      { :question => "What does CAD stand for in architecture?",
+        :choices  => ["Computer Aided Design", "Creative Architectural Design", "Construction and Development", "Central Architectural Department"],
+        :answer_i => 0,
+        :hint     => "Digital design software." },
+      { :question => "Which principle focuses on building orientation for natural light?",
+        :choices  => ["Ventilation", "Insulation", "Daylighting", "Acoustics"],
+        :answer_i => 2,
+        :hint     => "Maximizing natural illumination." },
+      { :question => "What is the golden ratio in architecture?",
+        :choices  => ["1:1.414", "1:1.618", "1:2.0", "1:3.141"],
+        :answer_i => 1,
+        :hint     => "Mathematical proportion for aesthetics." }
+    ],
+    :chem => [
+      { :question => "What does P&ID stand for in chemical engineering?",
+        :choices  => ["Process and Instrumentation Diagram", "Pressure and Internal Design", "Plant and Industrial Development", "Process and Industrial Design"],
+        :answer_i => 0,
+        :hint     => "Technical drawing for process plants." },
+      { :question => "Which unit operation separates components by boiling point?",
+        :choices  => ["Filtration", "Distillation", "Crystallization", "Absorption"],
+        :answer_i => 1,
+        :hint     => "Vapor-liquid separation process." },
+      { :question => "What is the primary purpose of a heat exchanger?",
+        :choices  => ["Generate electricity", "Transfer thermal energy", "Store chemicals", "Control pressure"],
+        :answer_i => 1,
+        :hint     => "Temperature management in processes." }
+    ]
+  }
+
+  # Library hints for each department (textbook-style definitions)
+  LIBRARY_HINTS = {
+    :cse => [
+      "CPU (Central Processing Unit): The brain of the computer that executes instructions and performs calculations.",
+      "Programming Paradigms: Different approaches to writing code, including procedural (step-by-step), object-oriented, and functional programming.",
+      "Big-O Notation: Describes algorithm efficiency. Binary search is O(log n) because it halves the search space each step."
+    ],
+    :ece => [
+      "Frequency (Hertz): The number of cycles per second in a signal. Higher frequency = higher pitch in sound.",
+      "Analog Modulation: AM (Amplitude Modulation) varies signal strength, used in traditional radio broadcasting.",
+      "Diodes: Semiconductor devices that allow current flow in one direction only (forward bias), blocking reverse current."
+    ],
+    :eee => [
+      "Kirchhoff's Laws: Fundamental rules for electric circuits - Current Law (sum of currents at node = 0) and Voltage Law (sum of voltages in loop = 0).",
+      "Power (Watts): Rate of energy transfer. P = VI (Power = Voltage × Current) in electrical systems.",
+      "Transformers: Work only with AC (Alternating Current) using electromagnetic induction to change voltage levels."
+    ],
+    :mech => [
+      "Force (Newton): SI unit named after Isaac Newton. 1 N = 1 kg·m/s², measures push or pull on objects.",
+      "Otto Cycle: Four-stroke spark-ignition cycle used in petrol engines: intake, compression, power, exhaust strokes.",
+      "Viscosity: Fluid property measuring resistance to flow. Honey has high viscosity, water has low viscosity."
+    ],
+    :civil => [
+      "Cement Slurry: Mixture of cement and water used to bind aggregates in concrete. The binding agent in construction.",
+      "Cube Test: Standard test using 150mm concrete cubes to determine compressive strength after 28 days curing.",
+      "Bridges: Structures designed to carry traffic over obstacles like rivers, valleys, or other roads using beams, arches, or suspension."
+    ],
+    :arch => [
+      "CAD (Computer Aided Design): Digital software for creating precise architectural drawings, 3D models, and technical documentation.",
+      "Daylighting: Architectural principle of maximizing natural light in buildings through window placement, orientation, and design.",
+      "Golden Ratio (1:1.618): Mathematical proportion found in nature and used in architecture for aesthetically pleasing proportions."
+    ],
+    :chem => [
+      "P&ID (Process and Instrumentation Diagram): Technical drawings showing process flow, equipment, and control systems in chemical plants.",
+      "Distillation: Unit operation that separates liquid mixtures based on different boiling points using heat and condensation.",
+      "Heat Exchangers: Equipment designed to transfer thermal energy between fluids without mixing them, used for heating/cooling processes."
+    ]
+  }
+end

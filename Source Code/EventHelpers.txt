@@ -1,0 +1,138 @@
+# RGSS1 - Event Helper methods
+module EventHelpers
+  def self.call_quiz(dept_sym)
+    # Prevent re-asking if already collected
+    if CertificateInventory.collected?(dept_sym)
+      $game_system.se_play($data_system.decision_se)
+      return true  # Just return true, let the event handle the message
+    end
+    
+    # Check if subject has been studied
+    unless CertificateInventory.studied?(dept_sym)
+      $game_system.se_play($data_system.buzzer_se)
+      return false  # Just return false, let the event handle the message
+    end
+    
+    result = QuizSystem.ask(dept_sym)
+    HUD.refresh if defined?(HUD)
+    return result
+  end
+
+  # Call quiz using a numeric game variable ID.
+  # The variable may contain 1..5 (mapped to departments), or a String/Symbol like "cse".
+  def self.call_quiz_from_variable(var_id)
+    value = $game_variables[var_id]
+    dept = nil
+    if value.is_a?(Integer)
+      mapping = { 1=>:cse, 2=>:ece, 3=>:eee, 4=>:mech, 5=>:civil }
+      dept = mapping[value]
+    elsif value.is_a?(String)
+      dept = value.downcase.intern rescue nil
+    elsif value.is_a?(Symbol)
+      dept = value
+    end
+    return false unless dept
+    call_quiz(dept)
+  end
+
+  # Principal interaction: prioritize ID card first, then certificates
+  def self.principal_interact
+    # Check ID card first
+    unless CertificateInventory.has_id_card?
+      $game_system.se_play($data_system.decision_se)
+      CertificateInventory.give_id_card
+      $game_switches[11] = true  # Set switch to indicate ID card given
+      return true
+    end
+    
+    # If ID card exists, check certificates
+    if CertificateInventory.all_collected?
+      $game_switches[CollegeDashConfig::PRINCIPAL_OFFICE_SWITCH] = true
+      $game_system.se_play($data_system.decision_se)
+      $game_switches[12] = true  # Set switch to indicate all certificates collected
+    else
+      $game_system.se_play($data_system.buzzer_se)
+      $game_switches[13] = true  # Set switch to indicate need more certificates
+    end
+    return true
+  end
+
+  # Show study required message with proper exit handling
+  def self.show_study_required_message(dept_sym)
+    dept_name = dept_sym.to_s.upcase
+    message = "You need to study #{dept_name} from the library first!\n\nVisit the librarian and read the textbook before taking the quiz."
+    
+    # Use RGSS1 message system
+    $game_temp.message_text = message
+  end
+
+  # Library bookshelf interaction: show hints for a specific department
+  def self.library_bookshelf(dept_sym)
+    hints = CollegeDashConfig::LIBRARY_HINTS[dept_sym]
+    return false unless hints
+    
+    dept_name = dept_sym.to_s.upcase
+    
+    $game_system.se_play($data_system.decision_se)
+    
+    # Mark this subject as studied
+    CertificateInventory.study(dept_sym)
+    
+    # Use custom textbook window with all hints
+    show_textbook_window(dept_name, hints)
+    return true
+  end
+
+  # Custom textbook window for better text display
+  def self.show_textbook_window(dept_name, all_hints)
+    # Create and show textbook window with all hints
+    win = Window_Textbook.new("#{dept_name} Textbook", all_hints)
+    
+    # Navigation loop
+    loop do
+      Graphics.update
+      Input.update
+      if Input.trigger?(Input::C)
+        # Go to next definition, or exit if at last
+        if win.current_index < win.total_hints - 1
+          win.next_definition
+        else
+          break  # Exit after last definition
+        end
+      elsif Input.trigger?(Input::B) || Input.trigger?(Input::A) || Input.trigger?(Input::X) || Input.trigger?(Input::Y)
+        break  # Multiple exit options
+      end
+    end
+    
+    win.dispose
+    return true
+  end
+end
+
+# Expose methods for ease of use from event Script commands
+class Interpreter
+  def call_quiz(sym)
+    EventHelpers.call_quiz(sym)
+  end
+  def call_quiz_from_variable(var_id)
+    EventHelpers.call_quiz_from_variable(var_id)
+  end
+  def principal_interact
+    EventHelpers.principal_interact
+  end
+  def library_bookshelf(sym)
+    EventHelpers.library_bookshelf(sym)
+  end
+  def show_department_name(name)
+    HUD.show_department(name)
+  end
+  def hide_department_name
+    HUD.hide_department
+  end
+  def give_id_card
+    CertificateInventory.give_id_card
+  end
+  def check_id_card
+    CertificateInventory.has_id_card?
+  end
+end
